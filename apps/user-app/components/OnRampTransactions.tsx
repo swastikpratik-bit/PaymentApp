@@ -6,8 +6,7 @@ export const OnRampTransactions = ({
     transactions: {
         time: Date,
         amount: number,
-        // TODO: Can the type of `status` be more specific?
-        status: string,
+        status: "Success" | "Processing" | "Failure",
         provider: string
     }[]
 }) => {
@@ -21,18 +20,20 @@ export const OnRampTransactions = ({
     return <Card title="Recent Transactions">
         <div className="pt-2">
             {transactions.map((t, index) => (
-                <div key={index} className="flex justify-between">
+                <div key={index} className="flex justify-between my-3">
                     <div>
-                    <div className="text-sm">
-                        Received INR
+                        <div className="text-sm">
+                            {t.provider} <span className={`text-${t.status === "Success" ? "green": t.status === "Processing" ? "orange" : "red"}-600`}>{t.status}</span> 
+                        </div>
+                        <div className="text-slate-600 text-xs">
+                            {t.time.toDateString()}
+                        </div>
                     </div>
-                    <div className="text-slate-600 text-xs">
-                        {t.time.toDateString()}
-                    </div>
-                    </div>
-                    <div className="flex flex-col justify-center">
-                    + Rs {t.amount / 100}
-                    </div>
+                    <div className={`flex flex-col justify-center text-${t.status === "Success" ? "green": t.status === "Processing" ? "orange" : "red"}-600`}>
+
+                    {t.status === "Success" ? `+ Rs ${t.amount/ 100}`:t.status === "Processing" ? "--" : "Failure"}
+                    
+                    </div> 
                 </div>
             ))}
         </div>
